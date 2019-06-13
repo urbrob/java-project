@@ -12,7 +12,9 @@ public class Server{
             ServerSocket serverSocket = new ServerSocket(7998);
             while(true){
                 socket = serverSocket.accept();
-                new ClientThread(socket).start();
+                CSVControler csv_c = new CSVControler("notes.csv");
+                csv_c.run();
+                new ClientThread(socket, csv_c).start();
                 System.out.println("Przyjąłem nowego klienta");
             }
         }catch (Exception e){

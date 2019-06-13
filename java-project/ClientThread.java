@@ -10,10 +10,12 @@ public class ClientThread extends java.lang.Thread {
   public Scanner ser;
   public String user;
   public String local_addres;
+  public CSVControler csv_c;
 
-  public ClientThread(Socket s){
+  public ClientThread(Socket s, CSVControler csv_cont){
     socket = s;
-    sw = new ServerWorker();
+    csv_c = csv_cont;
+    sw = new ServerWorker(csv_c);
     try {
       ser = new Scanner(socket.getInputStream());
       user = ser.nextLine();
@@ -26,25 +28,20 @@ public class ClientThread extends java.lang.Thread {
     send_server_files(s);
   }
 
-  public Boolean check_if_user_have_permission(String user, String file_name){
-    return true;
-  }
-
   public void send_server_files(Socket socket){
     try{
-      File files_array[] = new File("/Users/urbrob/Desktop/java-project/1").listFiles();
+      File files_array[] = new File("1").listFiles();
       Coder coding_machine = new Coder();
       PrintWriter pw = new PrintWriter(socket.getOutputStream(), true);
       // Send every file which belongs to User
       for(File file : files_array){
         String file_name = file.getName();
-        if(file_name.equals("notes.csv") && check_if_user_have_permission(this.user, file_name)){
+        if(!file_name.equals(csv_c.file_name) && csv_c.check_if_user_have_permission(this.user, file_name)){
           String file_as_string = coding_machine.code(coding_machine.file_to_string(file));
           pw.println(file_name);
           pw.println(file_as_string);
         }
       }
-
       pw.println("end;");
     }catch(Exception e){
       e.printStackTrace();
