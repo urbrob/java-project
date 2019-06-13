@@ -3,7 +3,7 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.List;
 
-
+/** Klasa ma za zadanie postawić Serwer na zadanym porcie i przydzielić operatora do każdego nowego klienta */
 public class Server{
     private static Socket socket;
 

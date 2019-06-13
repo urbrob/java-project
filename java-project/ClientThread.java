@@ -4,6 +4,8 @@ import java.util.Scanner;
 import java.io.PrintWriter;
 import java.io.*;
 
+
+/** Zadaniem klasy ClientThread Jest obsłużenie danego clienta. Możemy traktować tę klasę jako osobistego przewodnika klienta*/
 public class ClientThread extends java.lang.Thread {
   private Socket socket;
   private ServerWorker sw;
@@ -28,6 +30,7 @@ public class ClientThread extends java.lang.Thread {
     send_server_files(s);
   }
 
+  /** Aplikacja która wysyła pliki serwerowe do klienta. Przydatne do synchronizacji danych podcza podłączenia*/
   public void send_server_files(Socket socket){
     try{
       File files_array[] = new File("1").listFiles();
@@ -49,6 +52,7 @@ public class ClientThread extends java.lang.Thread {
     }
   }
 
+  /** Metoda run rozpoczyna nieskończone nasłuchawnie informacji na temat zmian plików clienta */
   public void run() {
     try{
       ser = new Scanner(socket.getInputStream());

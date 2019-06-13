@@ -2,6 +2,8 @@ import java.util.*;
 import java.io.*;
 import java.io.PrintWriter;
 
+
+/** Zadaniem klasy DirWatcher jest monitorowanie zmian w folderze clienta*/
 public class DirWatcher{
   private String path;
   private File filesArray [];
@@ -19,12 +21,14 @@ public class DirWatcher{
     }
   }
 
+  /** Metoda pomocnicza mająca na celu wysłanie wiadomości do wcześnie połączengo serwera */
   public void send_message(String request_type, String file_name, String file_as_string){
     pw.println(request_type);
     pw.println(file_name);
     pw.println(file_as_string);
   }
 
+  /* Metoda zgłasza do serwera plik który został zmieniony */
   public void modified(File file){
     try{
       String file_as_string = new Coder().file_to_string(file);
@@ -34,7 +38,7 @@ public class DirWatcher{
       System.out.println(e);
     }
   }
-
+    /* Metoda zgłasza do serwera plik który został usunięty */
   public void deleted(File file){
     try{
       this.send_message("deleted", file.getName(), "Delete");
@@ -43,7 +47,7 @@ public class DirWatcher{
       System.out.println(e);
     }
   }
-
+  /** Metoda zgłasza do serwera plik który został stworzony */
   public void created(File file){
     try{
       String file_as_string = new Coder().file_to_string(file);
@@ -54,6 +58,7 @@ public class DirWatcher{
     }
   }
 
+  /** Metoda aktualizuje wpisy plików do lokalnej pamięci na podstawie której określa się nowe/zmodyfikowane oliki */
   public void update_dir_and_modification(File new_files[]){
     for(File file : new_files){
     this.dir.put(file.getName(), file);
@@ -61,6 +66,7 @@ public class DirWatcher{
     }
   }
 
+  /** Metoda sygnalizuje serwerowi o usunięciu wszystkich plików które zostały usunięte przez Usera*/
   public void delete_removed_files(){
     for(Map.Entry<String, File> entry : this.dir.entrySet()) {
       this.deleted(entry.getValue());
@@ -69,6 +75,7 @@ public class DirWatcher{
     }
   }
 
+  /** Metoda uaktywnia nieskończony cykl sprawdzający folder użytkownika */
   public void run() {
     while(true){
       File new_files [] = new File(path).listFiles();

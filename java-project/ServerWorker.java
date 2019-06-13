@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.*;
 import java.io.*;
 
-
+/** Jest to wraper który łączy funkcjonalność FileControler i środowiska serwerowego */
 public class ServerWorker{
   public ArrayList<String> storages;
   public String user;
@@ -35,6 +35,7 @@ public class ServerWorker{
     this.fc = new FileControler();
   }
 
+  /** Metoda zapisuje podany plik na serwerach */
   public void create_file(String file_name, String content){
     new Thread(() -> {
         for(String storage_path : this.storages){
@@ -46,6 +47,7 @@ public class ServerWorker{
 
   }
 
+  /** Metoda modyfikuje podany plik na serwerach */
   public void modify_file(String file_name, String content){
     new Thread(() -> {
       for(String storage_path : this.storages){
@@ -54,6 +56,7 @@ public class ServerWorker{
     }).start();
   }
 
+  /** Metoda usuwa podany plik na serwerach */
   public void delete_file(String file_name){
     new Thread(() -> {
       for(String storage_path : this.storages){

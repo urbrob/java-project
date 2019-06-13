@@ -2,6 +2,7 @@ import java.util.*;
 import java.io.*;
 
 
+// Klasa CSVControler odpowiada za wszelkie zmiany dokonane na pliku .csv*/
 public class CSVControler{
   public String user;
   public String file_name;
@@ -14,13 +15,17 @@ public class CSVControler{
     remove = new HashMap<String, String>();
   }
 
+  /** Metoda dodaje wpis usunięcia przynależności pliku do użytkownika*/
   public void remove_user_file(String user, String file_name){
     this.remove.put(user, file_name);
   }
+
+  /** Metoda dodaje wpis dodania przynależności pliku do użytkownika*/
   public void add_user_file(String user, String file_name){
     this.add.put(user, file_name);
   }
 
+  /** Metoda wczytuje całą zawartość pliku .csv a następnie parsuje ją na odpowiednią strukturę HashMap*/
   public HashMap<String, ArrayList<String>> load_csv_to_hash_map(){
     HashMap<String, ArrayList<String>> csv_hash = new HashMap<String, ArrayList<String>>();
 		BufferedReader reader;
@@ -44,6 +49,7 @@ public class CSVControler{
     return csv_hash;
   }
 
+  /** Metoda zamienia strukturę HashMap na jeden długi, prosty string*/
   public String csv_hash_to_string(HashMap<String, ArrayList<String>> csv_hash){
     String csv = "user,file_names\n";
     for(Map.Entry<String, ArrayList<String>> entry : csv_hash.entrySet()) {
@@ -56,6 +62,7 @@ public class CSVControler{
     return csv;
   }
 
+  /** Metoda modyfikuje przekazaną HashMap i usuwa z niej wszystkie zebrane przynależności */
   public HashMap<String, ArrayList<String>> remove_files(HashMap<String, ArrayList<String>> csv_hash){
     for(Map.Entry<String, String> entry : this.remove.entrySet()) {
       if(csv_hash.containsKey(entry.getKey())){
@@ -65,6 +72,7 @@ public class CSVControler{
     return csv_hash;
   }
 
+  /** Metoda modyfikuje przekazaną HashMap i dodaje z niej wszystkie zebrane przynależności */
   public HashMap<String, ArrayList<String>> add_files(HashMap<String, ArrayList<String>> csv_hash){
     for(Map.Entry<String, String> entry : this.add.entrySet()) {
       if(csv_hash.containsKey(entry.getKey())){
@@ -79,13 +87,14 @@ public class CSVControler{
     return csv_hash;
   }
 
+  /** Metoda pomocnicza która wrapuje parę innych metod w celu zapisania nowej wersji pliku .csv */
   public void save_hash_map_to_csv(HashMap<String, ArrayList<String>> csv_hash){
     ServerWorker sw = new ServerWorker();
     System.out.println(this.csv_hash_to_string(csv_hash));
     sw.modify_file(this.file_name, this.csv_hash_to_string(csv_hash));
   }
 
-
+  /** Metoda rozpoczynająca nieskończone sprawdzanie czy trzeba wykonać zmiany na pliku .csv*/
   public void run(){
     new Thread(() -> {
       while(true){
@@ -107,6 +116,7 @@ public class CSVControler{
     }).start();
   }
 
+  /** Metoda sprawdza czy podany użytkownik ma dostęp do danego pliku*/
   public Boolean check_if_user_have_permission(String user, String file_name){
     HashMap<String, ArrayList<String>> hash_csv = load_csv_to_hash_map();
     System.out.println(hash_csv);

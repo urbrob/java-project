@@ -1,0 +1,37 @@
+Applikacja:
+  Client:
+    - Próba połączenia z nieistniejącym serwerem - Wyłapanie wyjątku
+    - Próba odpalenia Client bez podanych parametrów - Wyłapanie wyjątku
+    - Próba odpalenia Client z poprawnymi danymi
+  DirWatcher:
+    - Próba rozpoczęnia DirWatcher bez podanych argumentów
+    - Próba rozpoczęnia DirWatcher z podanymi argumentami
+    - Podłączenie działającego DirWatcher, dodanie pliku, sprawdzenie PrintWritera czy wypluł odpowiednie wiadomości
+    - Podłączenie działającego DirWatcher, usunięcie pliku, sprawdzenie PrintWritera czy wypluł odpowiednie wiadomości
+    - Podłączenie działającego DirWatcher, modyfikacja pliku, sprawdzenie PrintWritera czy wypluł odpowiednie wiadomości
+
+
+Serwer:
+  ClientThread:
+    - Próba odpalenia ClientThread bez socketu i kontrolera
+    - Próba odpalenia ClientThread z socketem i kontrolerem
+    - Sprawdzenie funkcji send_server_files() - czy stworzy nowe pliki
+    - Sprawdzenie funkcji run() - Czy zwraca odpowieni request
+
+  CSVControler:
+    - Sprawdzenie funkcji load_csv_to_hash_map() czy parsuje poprawnie .csv
+    - Sprawdzenie funkcji csv_hash_to_string() czy poprawnie zamienia sparsowaną mapę na string
+
+  Server:
+    - Test dla zablokowanego i odblokowanego portu
+
+  ServerWorker:
+    - Test dla funkcji create,modified,deleted w pozytywnym kontekście i negatywnym
+
+
+Utils:
+  Coder:
+    - Sprawdzenie funkcji code na stringu ze znakiem \n
+    - Sprawdzenie funkcji code na stringu bez znaku \n
+    - Sprawdzenie funkcji decode na stringu ze znakiem :::n:::
+    - Sprawdzenie funkcji decode na stringu bez znaku :::n:::

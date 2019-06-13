@@ -3,14 +3,14 @@ import java.net.Socket;
 import java.util.*;
 import java.io.*;
 
-
+/** Zadaniem klasy obiektu jest stworzenie połączenia między clientem a serwerem, pobranie plików których nie posiadamy lokalnie oraz rozpoczęcie monitorowanie folderu lokalnego */
 public class Client{
-  // Task of Client class is to establish connection and start DirWatcher work
   private static Socket socket;
   public static Scanner s;
   public static PrintWriter pw;
   public static FileControler fc;
 
+  /** Metoda Rozpoczyna komunikację z serwerem i wysyła do niego dane użytkownika*/
   public static void establish_connection(String user, String location){
     try{
       InetAddress address = InetAddress.getByName("localhost");
@@ -27,6 +27,7 @@ public class Client{
     System.out.println("---- Connected with Server! ----");
   }
 
+  /** Metoda otwiera nasłuchiwanie na serwer w celu synchronizacji plików z serwerem */
   public static void download_files_from_server(Socket socket, String path){
     while(true){
       String file_name = s.nextLine();
@@ -38,7 +39,7 @@ public class Client{
     }
     System.out.println("---- Done Synchronization ----");
   }
-
+  /** Metoda rozpoczyna obserwacje folderu klienta */
   public static void start_watching_edition_of_files(String location){
     new Thread(() -> {
       DirWatcher dw = new DirWatcher(location, pw);
