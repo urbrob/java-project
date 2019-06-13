@@ -18,34 +18,53 @@ import javafx.stage.Stage;
 import javafx.scene.control.Separator;
 import javafx.geometry.VPos;
 import javafx.scene.layout.HBox;
-
+import javafx.scene.control.ComboBox;
+import java.io.File;
 
 public class Main extends Application {
 
   @Override
   public void start(Stage primaryStage) {
     BorderPane root = new BorderPane();
-    Scene scene = new Scene(root, 400, 250, Color.WHITE);
+    Scene scene = new Scene(root, 600, 400, Color.WHITE);
 
-    HBox hbox = new HBox();
-    hbox.setPadding(new Insets(15, 12, 15, 12));
-    hbox.setSpacing(10);
-    root.setTop(hbox);
+    // Status
+    HBox top = new HBox();
+    top.setPadding(new Insets(10, 10, 10, 10));
+    top.setSpacing(10);
+    Label status_title = new Label("Status: ");
+    Label status_value = new Label("ZABIJ SIE");
+    top.getChildren().addAll(status_title, status_value);
+    root.setTop(top);
 
-    Label status = new Label("Status: ");
+    // share
+    HBox bottom = new HBox();
+    Label share_label = new Label("User: ");
+    ComboBox<String> shareComboBox = new ComboBox<String>();
+    shareComboBox.getItems().addAll(
+        "Highest",
+        "High",
+        "Normal",
+        "Low",
+        "Lowest"
+    );
+    Button shareButton = new Button(" Share ");
+    shareButton.setOnAction((ActionEvent event) -> {
 
-
-    Label x = new Label("chujowo");
-    hbox.getChildren().addAll(status, x);
+    });
+    bottom.getChildren().addAll(share_label, shareComboBox, shareButton);
+    bottom.setPadding(new Insets(10, 10, 10, 10));
+    bottom.setSpacing(10);
+    root.setBottom(bottom);
 
 
     GridPane gridpane = new GridPane();
-    gridpane.setPadding(new Insets(5));
+    gridpane.setPadding(new Insets(10));
     gridpane.setHgap(10);
     gridpane.setVgap(10);
-    ColumnConstraints column1 = new ColumnConstraints(150, 150, Double.MAX_VALUE);
+    ColumnConstraints column1 = new ColumnConstraints(200, 200, Double.MAX_VALUE);
     ColumnConstraints column2 = new ColumnConstraints(50);
-    ColumnConstraints column3 = new ColumnConstraints(150, 150, Double.MAX_VALUE);
+    ColumnConstraints column3 = new ColumnConstraints(200, 200, Double.MAX_VALUE);
     column1.setHgrow(Priority.ALWAYS);
     column3.setHgrow(Priority.ALWAYS);
     gridpane.getColumnConstraints().addAll(column1, column2, column3);
@@ -55,12 +74,12 @@ public class Main extends Application {
     GridPane.setHalignment(filesLbl, HPos.CENTER);
     gridpane.add(filesLbl, 0, 1);
 
-    Label shareLbl = new Label("Share");
+    Label shareLbl = new Label("To sharing");
     gridpane.add(shareLbl, 2, 1);
     GridPane.setHalignment(shareLbl, HPos.CENTER);
 
     // Tutaj trzeba dodać listę plików
-    final ObservableList<String> files = FXCollections.observableArrayList("Z", "A", "B", "C", "D");
+    final ObservableList<String> files = FXCollections.observableArrayList(new File("/Users/dawidcwiek/Desktop/hack/java-project/java-project").list());
     final ListView<String> filesListView = new ListView<>(files);
     gridpane.add(filesListView, 0, 2);
 
@@ -70,22 +89,21 @@ public class Main extends Application {
 
     Button sendRightButton = new Button(" > ");
     sendRightButton.setOnAction((ActionEvent event) -> {
-      String potential = filesListView.getSelectionModel()
-          .getSelectedItem();
-      if (potential != null) {
+      String your_file = filesListView.getSelectionModel().getSelectedItem();
+      if (your_file != null) {
         filesListView.getSelectionModel().clearSelection();
-        files.remove(potential);
-        share.add(potential);
+        if (!share.contains(your_file)) {
+            share.add(your_file);
+        }
       }
     });
 
     Button sendLeftButton = new Button(" < ");
     sendLeftButton.setOnAction((ActionEvent event) -> {
-      String s = shareListView.getSelectionModel().getSelectedItem();
-      if (s != null) {
+      String share_file = shareListView.getSelectionModel().getSelectedItem();
+      if (share_file != null) {
         shareListView.getSelectionModel().clearSelection();
-        share.remove(s);
-        files.add(s);
+        share.remove(share_file);
       }
     });
     VBox vbox = new VBox(5);
