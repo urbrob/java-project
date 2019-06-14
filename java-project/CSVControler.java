@@ -115,6 +115,13 @@ public class CSVControler{
       }
     }).start();
   }
+  public ArrayList<String> get_user_files(String user){
+    HashMap<String, ArrayList<String>> csv_hash = load_csv_to_hash_map()
+    if(csv_hash.containsKey(user)){
+      return csv_hash.get(user);
+    }
+    return new ArrayList<String>();
+  }
 
   /** Metoda sprawdza czy podany użytkownik ma dostęp do danego pliku*/
   public Boolean check_if_user_have_permission(String user, String file_name){
