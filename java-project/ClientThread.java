@@ -3,6 +3,7 @@ import java.util.Date;
 import java.util.Scanner;
 import java.io.PrintWriter;
 import java.io.*;
+import javafx.beans.property.*;
 
 
 /** Zadaniem klasy ClientThread Jest obsłużenie danego clienta. Możemy traktować tę klasę jako osobistego przewodnika klienta*/
@@ -13,11 +14,14 @@ public class ClientThread extends java.lang.Thread {
   public String user;
   public String local_addres;
   public CSVControler csv_c;
+  public SimpleStringProperty status = new SimpleStringProperty();
 
-  public ClientThread(Socket s, CSVControler csv_cont){
+
+  public ClientThread(Socket s, CSVControler csv_cont, SimpleStringProperty st){
     socket = s;
     csv_c = csv_cont;
-    sw = new ServerWorker(csv_c);
+    status = st;
+    sw = new ServerWorker(csv_c, st);
     try {
       ser = new Scanner(socket.getInputStream());
       user = ser.nextLine();
@@ -50,6 +54,7 @@ public class ClientThread extends java.lang.Thread {
       e.printStackTrace();
       System.out.println(e);
     }
+    this.status.setValue("Synchronized!");
   }
 
   /** Metoda run rozpoczyna nieskończone nasłuchawnie informacji na temat zmian plików clienta */

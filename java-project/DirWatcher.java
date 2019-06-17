@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 import java.io.PrintWriter;
-
+import javafx.beans.property.SimpleStringProperty;
 
 /** Zadaniem klasy DirWatcher jest monitorowanie zmian w folderze clienta*/
 public class DirWatcher{
@@ -10,10 +10,12 @@ public class DirWatcher{
   public HashMap<String, Long> modification = new HashMap<String, Long>();
   public HashMap<String, File> dir = new HashMap<String, File>();
   private PrintWriter pw;
+  public SimpleStringProperty status;
 
-  public DirWatcher(String path, PrintWriter ow) {
+  public DirWatcher(String path, PrintWriter ow, SimpleStringProperty sb) {
     this.path = path;
     this.pw = ow;
+    this.status = sb;
     filesArray = new File(path).listFiles();
     for(File file : filesArray){
       dir.put(file.getName(), file);
@@ -26,12 +28,17 @@ public class DirWatcher{
     pw.println(request_type);
     pw.println(file_name);
     pw.println(file_as_string);
+    this.status.setValue("Sent file!");
+    try{
+      Thread.sleep(3000);
+    }catch(Exception e) {}
   }
 
   /* Metoda zgłasza do serwera plik który został zmieniony */
   public void modified(File file){
     try{
       String file_as_string = new Coder().file_to_string(file);
+      this.status.setValue("I got modification!");
       this.send_message("modified", file.getName(), file_as_string);
     }catch(Exception e){
       e.printStackTrace();
@@ -51,6 +58,10 @@ public class DirWatcher{
   public void created(File file){
     try{
       String file_as_string = new Coder().file_to_string(file);
+      this.status.setValue("New file!");
+      try{
+        Thread.sleep(10000);
+      }catch(Exception e) {}
       this.send_message("created", file.getName(), file_as_string);
     }catch(Exception e){
       e.printStackTrace();
@@ -61,8 +72,8 @@ public class DirWatcher{
   /** Metoda aktualizuje wpisy plików do lokalnej pamięci na podstawie której określa się nowe/zmodyfikowane oliki */
   public void update_dir_and_modification(File new_files[]){
     for(File file : new_files){
-    this.dir.put(file.getName(), file);
-    this.modification.put(file.getName(), new Long(file.lastModified()));
+      this.dir.put(file.getName(), file);
+      this.modification.put(file.getName(), new Long(file.lastModified()));
     }
   }
 
@@ -91,7 +102,8 @@ public class DirWatcher{
           }
         }
       }
-      this.delete_removed_files();
+      this.status.setValue("Watching -,-");
+      //this.delete_removed_files();
       this.update_dir_and_modification(new_files);
       }
     }

@@ -94,6 +94,25 @@ public class CSVControler{
     sw.modify_file(this.file_name, this.csv_hash_to_string(csv_hash));
   }
 
+
+  public ArrayList<String> load_user_list(){
+    HashMap<String, ArrayList<String>> csv_hash =  this.load_csv_to_hash_map();
+    ArrayList<String> user_list = new ArrayList<String>();
+    for(Map.Entry<String, ArrayList<String>> entry : csv_hash.entrySet()) {
+      user_list.add(entry.getKey());
+    }
+    return user_list;
+  }
+
+  public void run_circle(){
+    HashMap<String, ArrayList<String>> csv_hash = this.load_csv_to_hash_map();
+    csv_hash = this.remove_files(csv_hash);
+    csv_hash = this.add_files(csv_hash);
+    this.save_hash_map_to_csv(csv_hash);
+    this.add = new HashMap<String, String>();
+    this.remove = new HashMap<String, String>();
+  }
+
   /** Metoda rozpoczynająca nieskończone sprawdzanie czy trzeba wykonać zmiany na pliku .csv*/
   public void run(){
     new Thread(() -> {
@@ -102,21 +121,13 @@ public class CSVControler{
           Thread.sleep(1000);
         }catch(Exception e){}
         if(!this.add.isEmpty() || !this.remove.isEmpty()){
-          HashMap<String, ArrayList<String>> csv_hash = this.load_csv_to_hash_map();
-          System.out.println(csv_hash);
-          csv_hash = this.remove_files(csv_hash);
-          System.out.println(csv_hash);
-          csv_hash = this.add_files(csv_hash);
-          System.out.println(csv_hash);
-          this.save_hash_map_to_csv(csv_hash);
-          this.add = new HashMap<String, String>();
-          this.remove = new HashMap<String, String>();
+          this.run_circle();
         }
       }
     }).start();
   }
   public ArrayList<String> get_user_files(String user){
-    HashMap<String, ArrayList<String>> csv_hash = load_csv_to_hash_map()
+    HashMap<String, ArrayList<String>> csv_hash = load_csv_to_hash_map();
     if(csv_hash.containsKey(user)){
       return csv_hash.get(user);
     }
